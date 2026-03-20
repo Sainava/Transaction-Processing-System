@@ -52,5 +52,3 @@ This project was completed as part of the JP Morgan Chase Virtual Experience Pro
 This project was initially based on a scaffold provided as part of the JPMorgan Chase Virtual Experience Program on Forage, and has been adapted to explore real-world backend system design concepts.
 
 ---
-
-**Note:** This is an educational project completed as part of a virtual internship program.
