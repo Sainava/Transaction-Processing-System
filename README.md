@@ -9,6 +9,7 @@ Originally developed as part of the JPMorgan Chase Software Engineering Virtual 
 ## Key Features
 
 - Event-driven architecture using Apache Kafka for asynchronous transaction processing
+- **Idempotency & Replay Protection** — Exactly-once transaction semantics with distributed lock mechanism using database-level unique constraints and three-state lock machine (PROCESSING → COMPLETED/FAILED)
 - Transaction validation logic ensuring balance consistency and user integrity
 - RESTful APIs for querying account balances
 - Integration with external services for incentive processing
@@ -19,11 +20,12 @@ Originally developed as part of the JPMorgan Chase Software Engineering Virtual 
 
 - Producers publish transaction events to Kafka topics
 - Consumers process transactions asynchronously via Kafka listeners
+- **Idempotency Layer:** Each transaction is assigned a unique `transactionId` (auto-generated UUID if not provided). The system maintains a `ProcessedEventId` register with database-level unique constraints to detect and prevent duplicate processing. Transactions progress through three states (PROCESSING → COMPLETED/FAILED), ensuring exactly-once semantics even in the presence of retries and network failures.
 - Business logic validates transactions and updates balances
 - External incentive service is invoked post-validation
-- Data is persisted using JPA with transactional integrity
+- Data is persisted using JPA with transactional integrity and audit trails
 
-This architecture enables decoupled services, improved scalability, and reliable transaction processing.
+This architecture enables decoupled services, improved scalability, reliable transaction processing, and protection against replay attacks in distributed systems.
 
 ## Tech Stack
 
