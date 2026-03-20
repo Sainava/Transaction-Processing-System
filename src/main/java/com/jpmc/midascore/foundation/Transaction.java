@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Transaction {
+    private String transactionId;  // Unique idempotency key (UUID)
     private long senderId;
     private long recipientId;
     private float amount;
@@ -15,6 +16,22 @@ public class Transaction {
         this.senderId = senderId;
         this.recipientId = recipientId;
         this.amount = amount;
+        this.transactionId = null;  // Will be set by producer or generated if missing
+    }
+
+    public Transaction(String transactionId, long senderId, long recipientId, float amount) {
+        this.transactionId = transactionId;
+        this.senderId = senderId;
+        this.recipientId = recipientId;
+        this.amount = amount;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
     }
 
     public long getSenderId() {
@@ -43,6 +60,6 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return "Transaction {senderId=" + senderId + ", recipientId=" + recipientId + ", amount=" + amount + "}";
+        return "Transaction {transactionId=" + transactionId + ", senderId=" + senderId + ", recipientId=" + recipientId + ", amount=" + amount + "}";
     }
 }
