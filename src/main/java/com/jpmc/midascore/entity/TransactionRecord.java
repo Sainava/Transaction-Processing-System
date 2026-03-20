@@ -3,12 +3,17 @@ package com.jpmc.midascore.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "transactions")
+@Table(name = "transactions", indexes = {
+    @Index(name = "idx_transaction_id", columnList = "transaction_id", unique = true)
+})
 public class TransactionRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "transaction_id", unique = true)
+    private String transactionId;
 
     @ManyToOne
     @JoinColumn(name = "sender_id")
@@ -27,7 +32,16 @@ public class TransactionRecord {
     public TransactionRecord() {
     }
 
-    // Updated constructor to include incentive
+    // Updated constructor to include transactionId and incentive
+    public TransactionRecord(String transactionId, UserRecord sender, UserRecord recipient, float amount, float incentive) {
+        this.transactionId = transactionId;
+        this.sender = sender;
+        this.recipient = recipient;
+        this.amount = amount;
+        this.incentive = incentive;
+    }
+
+    // Legacy constructor for backward compatibility
     public TransactionRecord(UserRecord sender, UserRecord recipient, float amount, float incentive) {
         this.sender = sender;
         this.recipient = recipient;
@@ -42,6 +56,14 @@ public class TransactionRecord {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
     }
 
     public UserRecord getSender() {
@@ -79,8 +101,8 @@ public class TransactionRecord {
 
     @Override
     public String toString() {
-        return String.format("TransactionRecord[id=%d, sender=%s, recipient=%s, amount=%f, incentive=%f]",
-                id, sender != null ? sender.getName() : "null",
+        return String.format("TransactionRecord[id=%d, transactionId=%s, sender=%s, recipient=%s, amount=%f, incentive=%f]",
+                id, transactionId, sender != null ? sender.getName() : "null",
                 recipient != null ? recipient.getName() : "null", amount, incentive);
     }
 }
